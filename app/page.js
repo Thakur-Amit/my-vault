@@ -179,7 +179,7 @@ export default function IconVault() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-6 gap-1.5 md:gap-6">
+            <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-6 gap-1.5 md:gap-6">
               {icons.map((icon) => (
                 <div key={icon.id} className="group relative bg-[#0F172A] border border-slate-800 p-1 md:p-4 rounded-xl md:rounded-2xl hover:border-indigo-500 transition-all flex flex-col shadow-lg shadow-black/20">
                   {session && (
@@ -190,7 +190,7 @@ export default function IconVault() {
                     {icon.category || 'MISC'}
                   </span>
 
-                  <div className="h-10 md:h-32 flex items-center justify-center mb-1.5 md:mb-4 bg-white rounded-lg md:rounded-xl overflow-hidden p-1.5 md:p-6 shadow-inner border border-slate-200 mt-3 md:mt-0">
+                  <div className="h-16 md:h-32 flex items-center justify-center mb-1.5 md:mb-4 bg-white rounded-lg md:rounded-xl overflow-hidden p-1.5 md:p-6 shadow-inner border border-slate-200 mt-3 md:mt-0">
                     <img src={icon.url} alt={icon.name} className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform drop-shadow-sm" />
                   </div>
                   
