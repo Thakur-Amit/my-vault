@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '../lib/supabase'; // 100% Asli Supabase Connection
 
 export default function IconVault() {
   const [icons, setIcons] = useState([]);
@@ -112,22 +112,20 @@ export default function IconVault() {
     setLoading(false);
   };
 
-  // --- UI CHANGES START HERE ---
-  // Background changed to Firstbase Navy (#07071f)
   return (
-    <div className="min-h-screen bg-[#06061A] text-slate-100 p-8 font-sans">
-      <header className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 border-b border-slate-800 pb-6 gap-4">
-        <div>
-          <h1 className="text-3xl font-black tracking-tight text-white">THAKUR ASSET MANAGER</h1>
-          <p className="text-slate-400 text-sm">Secured Internal Team Library</p>
+    <div className="min-h-screen bg-[#06061A] text-slate-100 p-2 md:p-8 font-sans">
+      <header className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-3 mb-4 md:mb-8 border-b border-slate-800 pb-3 md:pb-6">
+        <div className="text-center md:text-left w-full md:w-auto">
+          <h1 className="text-lg md:text-3xl font-black tracking-tight text-white">THAKUR ASSET MANAGER</h1>
+          <p className="text-slate-400 text-[10px] md:text-sm mt-0.5">Secured Internal Team Library</p>
         </div>
         
         {session ? (
-          <div className="flex items-center gap-4 bg-[#0F172A] p-2 rounded-xl border border-slate-800 shadow-lg">
+          <div className="flex flex-wrap justify-center items-center gap-1.5 bg-[#0F172A] p-1.5 md:p-2 rounded-xl border border-slate-800 shadow-lg w-full md:w-auto">
             <select 
               value={uploadCategory} 
               onChange={(e) => setUploadCategory(e.target.value)}
-              className="bg-slate-800 text-slate-200 text-sm px-3 py-2 rounded-lg outline-none border border-slate-700 focus:border-indigo-500"
+              className="bg-slate-800 text-slate-200 text-[10px] md:text-sm px-2 md:px-3 py-1 md:py-2 rounded-lg outline-none border border-slate-700 focus:border-indigo-500 flex-1 md:flex-none"
             >
               <option value="Action">Action (Upload, Settings)</option>
               <option value="Navigation">Navigation (Home, Arrows)</option>
@@ -136,29 +134,28 @@ export default function IconVault() {
               <option value="Misc">Misc (Others)</option>
             </select>
 
-            {/* Indigo button matching Firstbase */}
-            <label className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 px-5 py-2 rounded-lg text-sm font-bold transition-all shadow-lg shadow-indigo-900/20">
-              {loading ? "WAIT..." : "+ ADD ICON"}
+            <label className="cursor-pointer bg-indigo-600 hover:bg-indigo-700 px-3 md:px-5 py-1 md:py-2 rounded-lg text-[10px] md:text-sm font-bold transition-all shadow-lg shadow-indigo-900/20 flex-1 md:flex-none text-center">
+              {loading ? "WAIT..." : "+ ADD"}
               <input type="file" className="hidden" onChange={uploadIcon} disabled={loading} />
             </label>
-            <button onClick={handleLogout} className="bg-slate-800 hover:bg-red-900/50 text-slate-300 hover:text-red-400 px-4 py-2 rounded-lg text-sm font-bold transition-colors">Logout</button>
+            <button onClick={handleLogout} className="bg-slate-800 hover:bg-red-900/50 text-slate-300 hover:text-red-400 px-2 md:px-4 py-1 md:py-2 rounded-lg text-[10px] md:text-sm font-bold flex-1 md:flex-none transition-colors">Logout</button>
           </div>
         ) : (
-          <form onSubmit={handleLogin} className="flex gap-2">
-            <input type="email" placeholder="Team Email" value={email} onChange={(e) => setEmail(e.target.value)} className="px-3 py-2 bg-[#0F172A] border border-slate-700 rounded text-sm focus:border-indigo-500 outline-none" required />
-            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="px-3 py-2 bg-[#0F172A] border border-slate-700 rounded text-sm focus:border-indigo-500 outline-none" required />
-            <button type="submit" disabled={loading} className="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded text-sm font-bold">{loading ? "..." : "Login"}</button>
+          <form onSubmit={handleLogin} className="flex gap-1.5 md:gap-2 w-full md:w-auto">
+            <input type="email" placeholder="Team Email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full px-2 md:px-3 py-1.5 md:py-2 bg-[#0F172A] border border-slate-700 rounded text-[10px] md:text-sm focus:border-indigo-500 outline-none" required />
+            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full px-2 md:px-3 py-1.5 md:py-2 bg-[#0F172A] border border-slate-700 rounded text-[10px] md:text-sm focus:border-indigo-500 outline-none" required />
+            <button type="submit" disabled={loading} className="w-full md:w-auto bg-slate-800 hover:bg-slate-700 px-3 md:px-4 py-1.5 md:py-2 rounded text-[10px] md:text-sm font-bold">{loading ? "..." : "Login"}</button>
           </form>
         )}
       </header>
 
-      <div className="max-w-6xl mx-auto mb-8">
-        <div className="flex flex-wrap gap-2 mb-6">
+      <div className="max-w-6xl mx-auto mb-4 md:mb-8">
+        <div className="flex flex-wrap justify-center md:justify-start gap-1 md:gap-2 mb-3 md:mb-6">
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => handleFilterClick(cat)}
-              className={`px-5 py-2 rounded-full text-sm font-bold transition-all border ${
+              className={`px-2.5 md:px-5 py-1 md:py-2 rounded-full text-[9px] md:text-sm font-bold transition-all border ${
                 activeCategory === cat 
                 ? 'bg-indigo-600 border-indigo-500 text-white shadow-lg shadow-indigo-900/20' 
                 : 'bg-[#0F172A] border-slate-800 text-slate-400 hover:border-slate-600 hover:text-white'
@@ -169,38 +166,37 @@ export default function IconVault() {
           ))}
         </div>
 
-        <form onSubmit={handleSearch} className="flex gap-2">
-          <input type="text" placeholder="Naam se dhoondiye..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full px-5 py-3 bg-[#0F172A] border border-slate-800 rounded-xl text-slate-200 focus:border-indigo-500 outline-none transition-all placeholder-slate-500 shadow-inner" />
-          <button type="submit" disabled={isSearching} className="bg-slate-800 hover:bg-slate-700 text-white px-8 rounded-xl font-bold transition-colors border border-slate-700">{isSearching ? "..." : "SEARCH"}</button>
+        <form onSubmit={handleSearch} className="flex gap-1.5 md:gap-2">
+          <input type="text" placeholder="Naam se dhoondiye..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full px-3 md:px-5 py-1.5 md:py-3 bg-[#0F172A] border border-slate-800 rounded-lg md:rounded-xl text-[10px] md:text-sm text-slate-200 focus:border-indigo-500 outline-none transition-all placeholder-slate-500 shadow-inner" />
+          <button type="submit" disabled={isSearching} className="bg-slate-800 hover:bg-slate-700 text-white px-3 md:px-8 rounded-lg md:rounded-xl font-bold text-[10px] md:text-sm border border-slate-700 transition-colors">{isSearching ? "..." : "SEARCH"}</button>
         </form>
       </div>
 
       <main className="max-w-6xl mx-auto pb-20">
         {icons.length === 0 ? (
-          <div className="text-center py-20 border-2 border-dashed border-slate-800 rounded-3xl bg-[#0F172A]/50">
-            <p className="text-slate-500">Is filter ya search mein koi data nahi mila, Thakur.</p>
+          <div className="text-center py-10 md:py-20 border-2 border-dashed border-slate-800 rounded-3xl bg-[#0F172A]/50">
+            <p className="text-[10px] md:text-sm text-slate-500">Is filter ya search mein koi data nahi mila, Thakur.</p>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-5 lg:grid-cols-6 gap-1.5 md:gap-6">
               {icons.map((icon) => (
-                // Card background updated to Slate-900 (#0F172A)
-                <div key={icon.id} className="group relative bg-[#0F172A] border border-slate-800 p-4 rounded-2xl hover:border-indigo-500 transition-all flex flex-col shadow-lg shadow-black/20">
+                <div key={icon.id} className="group relative bg-[#0F172A] border border-slate-800 p-1 md:p-4 rounded-xl md:rounded-2xl hover:border-indigo-500 transition-all flex flex-col shadow-lg shadow-black/20">
                   {session && (
-                    <button onClick={() => deleteIcon(icon.id, icon.url)} disabled={loading} className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white text-[10px] px-2 py-1 rounded-md z-10 font-bold opacity-0 group-hover:opacity-100 transition-opacity shadow-md">X</button>
+                    <button onClick={() => deleteIcon(icon.id, icon.url)} disabled={loading} className="absolute top-1 right-1 md:top-2 md:right-2 bg-red-500 hover:bg-red-600 text-white text-[10px] md:text-[10px] px-1 py-[1px] md:px-2 md:py-1 rounded z-10 font-bold opacity-0 group-hover:opacity-100 transition-opacity shadow-md">X</button>
                   )}
                   
-                  <span className="absolute top-3 left-3 bg-slate-800 text-slate-300 text-[9px] px-2 py-1 rounded uppercase font-bold z-10 border border-slate-700 shadow-sm">
+                  <span className="absolute top-1 left-1 md:top-3 md:left-3 bg-slate-800 text-slate-300 text-[7px] md:text-[9px] px-1 py-[1px] md:px-2 md:py-1 rounded uppercase font-bold z-10 border border-slate-700 shadow-sm">
                     {icon.category || 'MISC'}
                   </span>
 
-                  {/* THAKUR'S LOGIC APPLIED: Pure White Background for the Icon image */}
-                  <div className="h-32 flex items-center justify-center mb-4 bg-white rounded-xl overflow-hidden p-6 shadow-inner border border-slate-200">
+                  <div className="h-10 md:h-32 flex items-center justify-center mb-1.5 md:mb-4 bg-white rounded-lg md:rounded-xl overflow-hidden p-1.5 md:p-6 shadow-inner border border-slate-200 mt-3 md:mt-0">
                     <img src={icon.url} alt={icon.name} className="max-h-full max-w-full object-contain group-hover:scale-110 transition-transform drop-shadow-sm" />
                   </div>
                   
-                  <p className="text-[10px] text-slate-400 truncate mb-3 text-center uppercase tracking-widest font-bold">{icon.name}</p>
-                  <a href={icon.url} target="_blank" download className="mt-auto block text-center bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white py-2 rounded-lg text-xs font-bold transition-colors">
+                  <p className="text-[8px] md:text-[10px] text-slate-400 truncate mb-1.5 md:mb-3 text-center uppercase tracking-widest font-bold">{icon.name}</p>
+                  
+                  <a href={icon.url} target="_blank" download className="mt-auto block text-center bg-slate-800 hover:bg-indigo-600 text-slate-200 hover:text-white py-1 md:py-2 rounded-md md:rounded-lg text-[10px] md:text-xs font-bold transition-colors truncate">
                     DOWNLOAD
                   </a>
                 </div>
@@ -208,11 +204,11 @@ export default function IconVault() {
             </div>
 
             {hasMore && (
-              <div className="mt-12 text-center">
+              <div className="mt-8 md:mt-12 text-center">
                 <button 
                   onClick={loadMoreIcons}
                   disabled={isSearching}
-                  className="bg-[#0F172A] border border-slate-800 hover:border-indigo-500 text-slate-300 px-8 py-3 rounded-xl text-sm font-bold transition-all disabled:opacity-50 shadow-lg"
+                  className="bg-[#0F172A] border border-slate-800 hover:border-indigo-500 text-slate-300 px-4 md:px-8 py-2 md:py-3 rounded-xl text-[10px] md:text-sm font-bold transition-all disabled:opacity-50 shadow-lg"
                 >
                   {isSearching ? "LOADING..." : "LOAD MORE ICONS"}
                 </button>
