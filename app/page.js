@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import Image from 'next/image';
 
 // ==========================================
 // CONFIGURATION & CONSTANTS
@@ -27,32 +28,32 @@ const ColorTags = ['BRAND', 'Primary', 'Secondary', 'Accent', 'Background', 'Sur
 export default function Page() {
   const [assets, setAssets] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('icons'); 
-  
+  const [activeTab, setActiveTab] = useState('icons');
+
   const [searchInput, setSearchInput] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const [session, setSession] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
-  const [activeColorTag, setActiveColorTag] = useState('All'); 
+  const [activeColorTag, setActiveColorTag] = useState('All');
 
   // UI States
   const [fullScreenColor, setFullScreenColor] = useState(null);
-  const [fullScreenIcon, setFullScreenIcon] = useState(null); 
+  const [fullScreenIcon, setFullScreenIcon] = useState(null);
   const [iconBgColor, setIconBgColor] = useState('white');
   const [showTestText, setShowTestText] = useState(true);
   const [contextMenu, setContextMenu] = useState(null);
   const [toast, setToast] = useState(null);
   const [playingId, setPlayingId] = useState(null);
-  
+
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
-  
+
   // Modals & Forms
   const [showUploadDropdown, setShowUploadDropdown] = useState(false);
   const [showColorPanel, setShowColorPanel] = useState(false);
   const [colorForm, setColorForm] = useState({ name: '', hex: '#', group: 'Neutral', tag: 'Primary', official: '' });
-  
+
   // THAKUR: Login states add kiye hain yahan
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
@@ -60,7 +61,7 @@ export default function Page() {
 
   const audioRef = useRef(null);
   const fileInputRef = useRef(null);
-  const pendingUploadTag = useRef('Misc'); 
+  const pendingUploadTag = useRef('Misc');
   const longPressTimer = useRef(null);
 
   const categories = {
@@ -123,22 +124,22 @@ export default function Page() {
     setAssets([]);
     try {
       let query = supabase.from(activeTab).select('*').order('created_at', { ascending: false });
-      
+
       if (activeTab === 'colors') {
-        if (activeCategory !== 'All') query = query.eq('category', activeCategory); 
-        if (activeColorTag !== 'All') query = query.eq('design_tag', activeColorTag); 
+        if (activeCategory !== 'All') query = query.eq('category', activeCategory);
+        if (activeColorTag !== 'All') query = query.eq('design_tag', activeColorTag);
       } else {
         if (activeCategory !== 'All') query = query.eq('category', activeCategory);
       }
-      
+
       if (searchQuery) {
         query = query.ilike('name', `%${searchQuery}%`);
       }
-      
+
       const { data, error } = await query;
       if (!error) setAssets(data || []);
-    } catch (e) { 
-      console.error(e); 
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -156,7 +157,7 @@ export default function Page() {
       password: loginForm.password,
     });
     setAuthLoading(false);
-    
+
     if (error) {
       showToast(`LOGIN FAILED: ${error.message}`);
     } else {
@@ -202,7 +203,7 @@ export default function Page() {
 
         const { error } = await supabase.from(activeTab).insert([payload]);
         if (error) throw error;
-        
+
         showToast("SUCCESS: VAULT UPDATED!");
         fetchAssets();
       }
@@ -211,27 +212,27 @@ export default function Page() {
       showToast("ERROR: UPLOAD FAILED");
     } finally {
       setLoading(false);
-      e.target.value = null; 
+      e.target.value = null;
     }
   };
 
   const handleColorSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const payload = {
         name: colorForm.name,
-        url: colorForm.hex, 
-        category: colorForm.group, 
+        url: colorForm.hex,
+        category: colorForm.group,
         design_tag: colorForm.tag,
         official_name: colorForm.official || 'Unknown Shade'
       };
 
       const { error } = await supabase.from('colors').insert([payload]);
-      
+
       if (error) throw new Error(error.message);
-      
+
       showToast("COLOR REGISTERED!");
       setShowColorPanel(false);
       setColorForm({ name: '', hex: '#', group: 'Neutral', tag: 'Primary', official: '' });
@@ -247,19 +248,19 @@ export default function Page() {
   const copyFormat = (format, value) => {
     let text = value;
     if (format === 'rgba') {
-      const r = parseInt(value.slice(1,3), 16), g = parseInt(value.slice(3,5), 16), b = parseInt(value.slice(5,7), 16);
+      const r = parseInt(value.slice(1, 3), 16), g = parseInt(value.slice(3, 5), 16), b = parseInt(value.slice(5, 7), 16);
       text = `rgba(${r}, ${g}, ${b}, 1)`;
     } else if (format === 'tailwind') text = `bg-[${value}]`;
-    
+
     navigator.clipboard.writeText(text);
     showToast(`COPIED: ${text}`);
     setContextMenu(null);
   };
 
   const deleteAsset = async (id) => {
-    if(!window.confirm("THAKUR, PURGE FROM VAULT?")) return;
+    if (!window.confirm("THAKUR, PURGE FROM VAULT?")) return;
     const { error } = await supabase.from(activeTab).delete().eq('id', id);
-    if(!error) fetchAssets();
+    if (!error) fetchAssets();
   };
 
   // Long Press Handlers
@@ -269,7 +270,7 @@ export default function Page() {
     const y = touch.pageY;
     longPressTimer.current = setTimeout(() => {
       setContextMenu({ x, y, value: assetUrl });
-    }, 600); 
+    }, 600);
   };
 
   const handleTouchEnd = () => {
@@ -285,7 +286,7 @@ export default function Page() {
   // ----------------------------------------------------------------
   const renderAssetCard = (asset) => (
     <div key={asset.id} className="group relative flex flex-col bg-[#0A0A0F] border border-white/5 rounded-[2.5rem] p-4 transition-all hover:border-white/20 hover:bg-slate-900/20">
-      
+
       {/* THAKUR: Delete button ab sirf login hone par dikhega */}
       {session && (
         <button onClick={(e) => { e.stopPropagation(); deleteAsset(asset.id); }} className="absolute top-6 right-6 bg-red-600 text-white p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all z-[60] hover:scale-110 shadow-lg">
@@ -293,18 +294,18 @@ export default function Page() {
         </button>
       )}
 
-      <div 
+      <div
         onClick={() => {
-            if (activeTab === 'icons') {
-                setFullScreenIcon(asset.url);
-                setIconBgColor('white');
-            }
+          if (activeTab === 'icons') {
+            setFullScreenIcon(asset.url);
+            setIconBgColor('white');
+          }
         }}
         className={`relative w-full flex-1 min-h-[150px] mb-2 rounded-[2rem] flex items-center justify-center overflow-hidden transition-all bg-white ${activeTab === 'icons' ? 'cursor-zoom-in' : ''}`}
       >
         {activeTab === 'icons' && <img src={asset.url} className="max-h-[70%] max-w-[70%] object-contain drop-shadow-2xl transition-transform group-hover:scale-110" />}
         {activeTab === 'sounds' && (
-          <button onClick={(e) => {e.stopPropagation(); if(playingId === asset.id){audioRef.current.pause(); setPlayingId(null);}else{audioRef.current.src=asset.url; audioRef.current.play(); setPlayingId(asset.id);}}} 
+          <button onClick={(e) => { e.stopPropagation(); if (playingId === asset.id) { audioRef.current.pause(); setPlayingId(null); } else { audioRef.current.src = asset.url; audioRef.current.play(); setPlayingId(asset.id); } }}
             className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl transition-all ${playingId === asset.id ? 'bg-emerald-500 scale-110' : 'bg-[#0A0A0F] hover:bg-slate-800'}`}>
             {playingId === asset.id ? "⏸️" : (SoundIcons[asset.category] || "🎵")}
           </button>
@@ -315,19 +316,19 @@ export default function Page() {
           </span>
         </div>
       </div>
-      
+
       <div className="text-center flex flex-col h-full px-1">
         <p className="text-[12px] font-black uppercase truncate tracking-widest text-white mb-3">{asset.name}</p>
-        <button onClick={async () => {const res=await fetch(asset.url); const b=await res.blob(); const l=document.createElement('a'); l.href=window.URL.createObjectURL(b); l.download=asset.name; l.click();}}
+        <button onClick={async () => { const res = await fetch(asset.url); const b = await res.blob(); const l = document.createElement('a'); l.href = window.URL.createObjectURL(b); l.download = asset.name; l.click(); }}
           className="mt-auto py-3 bg-white/5 rounded-2xl text-[12px] font-black uppercase text-slate-600 hover:text-white hover:bg-white/10 transition-all">Get File</button>
       </div>
     </div>
   );
 
   const renderColorCard = (asset) => (
-    <div 
-      key={asset.id} 
-      onContextMenu={(e) => { e.preventDefault(); setContextMenu({ x: e.pageX, y: e.pageY, value: asset.url }); }} 
+    <div
+      key={asset.id}
+      onContextMenu={(e) => { e.preventDefault(); setContextMenu({ x: e.pageX, y: e.pageY, value: asset.url }); }}
       onTouchStart={(e) => handleTouchStart(e, asset.url)}
       onTouchEnd={handleTouchEnd}
       onTouchMove={handleTouchMove}
@@ -352,7 +353,7 @@ export default function Page() {
           )}
         </div>
       </div>
-      
+
       <div className="text-center flex flex-col h-full px-1">
         <p className="text-[12px] font-black uppercase truncate tracking-widest text-white mb-1">{asset.name}</p>
         <p className="text-[9px] font-bold tracking-wider text-amber-500 mb-1">{asset.url}</p>
@@ -364,7 +365,7 @@ export default function Page() {
   return (
     <div onClick={() => setContextMenu(null)} className="min-h-screen bg-[#020205] text-slate-100 font-sans selection:bg-white/10 overflow-x-hidden">
       <audio ref={audioRef} onEnded={() => setPlayingId(null)} className="hidden" />
-      
+
       <input type="file" ref={fileInputRef} onChange={handleFileUpload} className="hidden" accept={activeTab === 'icons' ? 'image/*' : 'audio/*'} />
 
       {toast && (
@@ -377,19 +378,29 @@ export default function Page() {
       <nav className={`fixed top-0 w-full z-[500] transition-all duration-500 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="bg-[#020205]/80 backdrop-blur-3xl border-b border-white/5 px-6 py-4">
           <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4 md:gap-6">
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <Image
+                src="/icon.svg"
+                alt="Asset Vault Logo"
+                width={40}
+                height={40}
+                priority={true}
+              />
             <h1 className={`text-xl md:text-2xl font-black tracking-[0.4em] uppercase italic transition-colors duration-500 ${themeStyles.text}`}>VAULT</h1>
-            
+            </div>
+
             <div className="flex-1 max-w-sm flex gap-2">
-              <input 
-                type="text" 
-                placeholder={`FIND ${activeTab.toUpperCase()}...`} 
-                className="w-full bg-white/5 border border-white/10 rounded-full px-5 py-2 text-[10px] tracking-widest outline-none focus:border-white/20 uppercase font-bold placeholder:text-slate-700" 
-                value={searchInput} 
-                onChange={(e) => setSearchInput(e.target.value)} 
+              <input
+                type="text"
+                placeholder={`FIND ${activeTab.toUpperCase()}...`}
+                className="w-full bg-white/5 border border-white/10 rounded-full px-5 py-2 text-[10px] tracking-widest outline-none focus:border-white/20 uppercase font-bold placeholder:text-slate-700"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && setSearchQuery(searchInput)}
               />
-              <button 
-                onClick={() => setSearchQuery(searchInput)} 
+              <button
+                onClick={() => setSearchQuery(searchInput)}
                 className="bg-white/10 px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-white/20 transition-all text-white border border-white/5"
               >
                 Search
@@ -420,17 +431,17 @@ export default function Page() {
               <div className="flex bg-white/5 p-1 rounded-full border border-white/5 flex-shrink-0">
                 {['icons', 'sounds', 'colors'].map(t => (
                   <button key={t} onClick={() => {
-                    setActiveTab(t); 
-                    setActiveCategory('All'); 
-                    setActiveColorTag('All'); 
-                    setSearchInput(''); 
+                    setActiveTab(t);
+                    setActiveCategory('All');
+                    setActiveColorTag('All');
+                    setSearchInput('');
                     setSearchQuery('');
                   }} className={`px-6 py-2 rounded-full text-[9px] font-black transition-all ${activeTab === t ? `${themeStyles.bg} text-white shadow-lg ${themeStyles.shadow}` : 'text-slate-500 hover:text-slate-300'}`}>
                     {t.toUpperCase()}
                   </button>
                 ))}
               </div>
-              
+
               <div className="flex gap-6 items-center">
                 {activeTab === 'colors' && <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">GROUP:</span>}
                 {categories.map(cat => (
@@ -455,7 +466,7 @@ export default function Page() {
       {/* MAIN GRID */}
       <main className="max-w-7xl mx-auto px-6 pt-52 pb-24">
         {assets.length === 0 ? (
-           <div className="text-center py-20 opacity-30 font-black text-4xl uppercase tracking-widest">No Assets Found</div>
+          <div className="text-center py-20 opacity-30 font-black text-4xl uppercase tracking-widest">No Assets Found</div>
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
             {assets.map((asset) => activeTab === 'colors' ? renderColorCard(asset) : renderAssetCard(asset))}
@@ -470,21 +481,21 @@ export default function Page() {
             <h2 className="text-white font-black uppercase text-xl mb-8 italic tracking-widest text-center">TEAM ACCESS</h2>
             <form onSubmit={handleLogin} className="space-y-6">
               <div className="space-y-4">
-                <input 
-                  type="email" 
-                  placeholder="TEAM EMAIL" 
-                  value={loginForm.email} 
-                  onChange={e => setLoginForm({...loginForm, email: e.target.value})} 
-                  className="w-full bg-black border border-white/5 rounded-2xl px-6 py-4 text-xs outline-none focus:border-white/20 transition-all text-white" 
-                  required 
+                <input
+                  type="email"
+                  placeholder="TEAM EMAIL"
+                  value={loginForm.email}
+                  onChange={e => setLoginForm({ ...loginForm, email: e.target.value })}
+                  className="w-full bg-black border border-white/5 rounded-2xl px-6 py-4 text-xs outline-none focus:border-white/20 transition-all text-white"
+                  required
                 />
-                <input 
-                  type="password" 
-                  placeholder="PASSWORD" 
-                  value={loginForm.password} 
-                  onChange={e => setLoginForm({...loginForm, password: e.target.value})} 
-                  className="w-full bg-black border border-white/5 rounded-2xl px-6 py-4 text-xs outline-none focus:border-white/20 transition-all text-white" 
-                  required 
+                <input
+                  type="password"
+                  placeholder="PASSWORD"
+                  value={loginForm.password}
+                  onChange={e => setLoginForm({ ...loginForm, password: e.target.value })}
+                  className="w-full bg-black border border-white/5 rounded-2xl px-6 py-4 text-xs outline-none focus:border-white/20 transition-all text-white"
+                  required
                 />
               </div>
               <button type="submit" disabled={authLoading} className="w-full bg-white text-black py-5 rounded-full text-[10px] font-black uppercase tracking-[0.3em] shadow-xl hover:brightness-90 transition-all">
@@ -516,24 +527,24 @@ export default function Page() {
         <div className="fixed inset-0 z-[600] bg-black/90 backdrop-blur-xl flex items-center justify-center p-6 animate-in fade-in duration-300" onClick={() => setShowColorPanel(false)}>
           <div className="bg-[#08080E] border border-white/10 p-10 rounded-[3.5rem] w-full max-w-md shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="flex justify-between items-start mb-10">
-              <h2 className="text-amber-500 font-black uppercase text-2xl italic tracking-tighter leading-none">Color<br/>Sector</h2>
+              <h2 className="text-amber-500 font-black uppercase text-2xl italic tracking-tighter leading-none">Color<br />Sector</h2>
               <div className="w-20 h-20 rounded-[1.5rem] border border-white/10 shadow-2xl transition-all duration-300" style={{ backgroundColor: colorForm.hex.length >= 4 ? colorForm.hex : '#000' }} />
             </div>
 
             <form onSubmit={handleColorSubmit} className="space-y-6">
               <div className="space-y-4">
-                <input type="text" placeholder="HEX CODE (#...)" value={colorForm.hex} onChange={e => setColorForm({...colorForm, hex: e.target.value.toUpperCase()})} className="w-full bg-black border border-white/5 rounded-2xl px-6 py-4 text-xs outline-none focus:border-amber-500 transition-all uppercase" required />
-                <input type="text" placeholder="PROJECT NAME" value={colorForm.name} onChange={e => setColorForm({...colorForm, name: e.target.value})} className="w-full bg-black border border-white/5 rounded-2xl px-6 py-4 text-xs outline-none focus:border-amber-500" required />
+                <input type="text" placeholder="HEX CODE (#...)" value={colorForm.hex} onChange={e => setColorForm({ ...colorForm, hex: e.target.value.toUpperCase() })} className="w-full bg-black border border-white/5 rounded-2xl px-6 py-4 text-xs outline-none focus:border-amber-500 transition-all uppercase" required />
+                <input type="text" placeholder="PROJECT NAME" value={colorForm.name} onChange={e => setColorForm({ ...colorForm, name: e.target.value })} className="w-full bg-black border border-white/5 rounded-2xl px-6 py-4 text-xs outline-none focus:border-amber-500" required />
                 <input type="text" placeholder="AUTO GENERATING NAME..." value={colorForm.official} readOnly className="w-full bg-black border border-white/5 rounded-2xl px-6 py-4 text-xs outline-none text-slate-500 opacity-60 cursor-not-allowed" />
-                
+
                 <div className="flex flex-wrap gap-2.5">
                   {BaseGroups.map(bg => (
-                    <button key={bg.name} type="button" onClick={() => setColorForm({...colorForm, group: bg.name})} className={`w-9 h-9 rounded-xl border-2 transition-all flex items-center justify-center ${colorForm.group === bg.name ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-90'}`} style={{ backgroundColor: bg.hex }}>
+                    <button key={bg.name} type="button" onClick={() => setColorForm({ ...colorForm, group: bg.name })} className={`w-9 h-9 rounded-xl border-2 transition-all flex items-center justify-center ${colorForm.group === bg.name ? 'border-white scale-110 shadow-lg' : 'border-transparent opacity-90'}`} style={{ backgroundColor: bg.hex }}>
                       {colorForm.group === bg.name && <span className="text-[12px] filter invert">✅</span>}
                     </button>
                   ))}
                 </div>
-                <select value={colorForm.tag} onChange={e => setColorForm({...colorForm, tag: e.target.value})} className="w-full bg-black border border-white/5 rounded-2xl px-6 py-4 text-[10px] font-black uppercase outline-none focus:border-amber-500 appearance-none transition-all cursor-pointer" required>
+                <select value={colorForm.tag} onChange={e => setColorForm({ ...colorForm, tag: e.target.value })} className="w-full bg-black border border-white/5 rounded-2xl px-6 py-4 text-[10px] font-black uppercase outline-none focus:border-amber-500 appearance-none transition-all cursor-pointer" required>
                   <option value="">Select Purpose</option>
                   {ColorTags.map(t => <option key={t} value={t}>{t}</option>)}
                 </select>
