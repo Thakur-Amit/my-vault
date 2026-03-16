@@ -285,7 +285,7 @@ export default function Page() {
   // RENDER HELPERS
   // ----------------------------------------------------------------
   const renderAssetCard = (asset) => (
-    <div key={asset.id} className="group relative flex flex-col bg-[#0A0A0F] border border-white/5 rounded-[2.5rem] p-4 transition-all hover:border-white/20 hover:bg-slate-900/20">
+    <div key={asset.id} className="group h-[220px] relative flex flex-col bg-[#0A0A0F] border border-white/5 rounded-[2.5rem] p-4 transition-all hover:border-white/20 hover:bg-slate-900/20">
 
       {/* THAKUR: Delete button ab sirf login hone par dikhega */}
       {session && (
@@ -301,9 +301,9 @@ export default function Page() {
             setIconBgColor('white');
           }
         }}
-        className={`relative w-full flex-1 min-h-[150px] mb-2 rounded-[2rem] flex items-center justify-center overflow-hidden transition-all bg-white ${activeTab === 'icons' ? 'cursor-zoom-in' : ''}`}
+        className={`relative w-full h-[300px] mb-2 rounded-[2rem] flex items-center justify-center overflow-hidden transition-all bg-white ${activeTab === 'icons' ? 'cursor-zoom-in' : ''}`}
       >
-        {activeTab === 'icons' && <img src={asset.url} className="max-h-[70%] max-w-[70%] object-contain drop-shadow-2xl transition-transform group-hover:scale-110" />}
+        {activeTab === 'icons' && <img src={asset.url} className="h-full w-full p-2 object-contain drop-shadow-2xl transition-transform group-hover:scale-110" />}
         {activeTab === 'sounds' && (
           <button onClick={(e) => { e.stopPropagation(); if (playingId === asset.id) { audioRef.current.pause(); setPlayingId(null); } else { audioRef.current.src = asset.url; audioRef.current.play(); setPlayingId(asset.id); } }}
             className={`w-14 h-14 rounded-full flex items-center justify-center text-2xl transition-all ${playingId === asset.id ? 'bg-emerald-500 scale-110' : 'bg-[#0A0A0F] hover:bg-slate-800'}`}>
