@@ -376,7 +376,7 @@ export default function Page() {
 
       {/* NAVBAR */}
       <nav className={`fixed top-0 w-full z-[500] transition-all duration-500 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}>
-        <div className="bg-[#020205]/80 backdrop-blur-3xl border-b border-white/5 px-6 py-4">
+        <div className={`bg-[#020205]/80 backdrop-blur-3xl border-b rounded-3xl px-6 py-4 transition-colors duration-500 ${themeStyles.border}`}>
           <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4 md:gap-6">
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -387,39 +387,58 @@ export default function Page() {
                 height={40}
                 priority={true}
               />
-            <h1 className={`text-xl md:text-2xl font-black tracking-[0.4em] uppercase italic transition-colors duration-500 ${themeStyles.text}`}>VAULT</h1>
+              <h1 className={`hidden sm:block text-xl md:text-2xl font-black tracking-[0.4em] uppercase italic transition-colors duration-500 ${themeStyles.text}`}>VAULT</h1>
             </div>
 
-            <div className="flex-1 max-w-sm flex gap-2">
-              <input
-                type="text"
-                placeholder={`FIND ${activeTab.toUpperCase()}...`}
-                className="w-full bg-white/5 border border-white/10 rounded-full px-5 py-2 text-[10px] tracking-widest outline-none focus:border-white/20 uppercase font-bold placeholder:text-slate-700"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && setSearchQuery(searchInput)}
-              />
+            {/* THAKUR: Ye main parent dabba hai. Ise 'flex' aur 'items-center' diya hai taaki input aur button ek seedhi line mein aayein. */}
+            <div className="w-full flex-1 min-w-[200px] max-w-md flex items-center gap-2">
+
+              {/* SECTION 1: Input aur Icon ka Wrapper */}
+              <div className="relative flex-1">
+
+                {/* The Professional SVG Icon */}
+                <svg
+                  className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+
+                <input
+                  type="text"
+                  placeholder={`FIND ${activeTab.toUpperCase()}...`}
+                  /* THAKUR: px-5 ki jagah pl-10 pr-4 lagaya hai. Ab text icon se nahi takrayega. */
+                  className="w-full bg-white/5 border border-white/50 rounded-full pl-10 pr-4 py-2 text-[10px] tracking-widest outline-none focus:border-blue-500 uppercase font-bold placeholder:text-slate-700 transition-all"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && setSearchQuery(searchInput)}
+                />
+              </div>
+
+              {/* SECTION 2: The Search Button */}
               <button
                 onClick={() => setSearchQuery(searchInput)}
-                className="bg-white/10 px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-white/20 transition-all text-white border border-white/5"
-              >
-                Search
+                /* THAKUR: 'shrink-0' add kiya hai taaki mobile par input ko jagah dene ke chakkar mein button na pichak jaye. */
+                className="bg-white/10 px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:bg-white/20 transition-all text-white border border-white/5 shrink-0 cursor-pointer"> Search
               </button>
+
             </div>
 
             {/* THAKUR: Login/Logout and +NEW buttons logic based on session */}
             <div className="flex items-center gap-4">
               {session ? (
                 <>
-                  <button onClick={handleLogout} className="text-white/40 hover:text-red-500 text-[9px] font-black uppercase tracking-widest transition-all">
+                  <button onClick={handleLogout} className="text-white/40 hover:text-red-500 text-[9px] font-black uppercase tracking-widest transition-all cursor-pointer">
                     Logout
                   </button>
-                  <button onClick={() => activeTab === 'colors' ? setShowColorPanel(true) : setShowUploadDropdown(true)} disabled={loading} className="bg-white text-black px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
+                  <button onClick={() => activeTab === 'colors' ? setShowColorPanel(true) : setShowUploadDropdown(true)} disabled={loading} className="bg-white text-black px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl cursor-pointer">
                     {loading ? 'WAIT...' : '+ NEW'}
                   </button>
                 </>
               ) : (
-                <button onClick={() => setShowLoginModal(true)} className="bg-white text-black px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl">
+                <button onClick={() => setShowLoginModal(true)} className="bg-white text-black px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-xl cursor-pointer">
                   TEAM LOGIN
                 </button>
               )}
@@ -436,7 +455,7 @@ export default function Page() {
                     setActiveColorTag('All');
                     setSearchInput('');
                     setSearchQuery('');
-                  }} className={`px-6 py-2 rounded-full text-[9px] font-black transition-all ${activeTab === t ? `${themeStyles.bg} text-white shadow-lg ${themeStyles.shadow}` : 'text-slate-500 hover:text-slate-300'}`}>
+                  }} className={`px-6 py-2 rounded-full text-[9px] font-black transition-all ${activeTab === t ? `${themeStyles.bg} text-white shadow-lg ${themeStyles.shadow}` : 'text-slate-500 hover:text-slate-300'} cursor-pointer`}>
                     {t.toUpperCase()}
                   </button>
                 ))}
@@ -445,7 +464,7 @@ export default function Page() {
               <div className="flex gap-6 items-center">
                 {activeTab === 'colors' && <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">GROUP:</span>}
                 {categories.map(cat => (
-                  <button key={cat} onClick={() => setActiveCategory(cat)} className={`text-[10px] font-black uppercase tracking-widest transition-all ${activeCategory === cat ? `text-white border-b-2 ${themeStyles.border} pb-1` : 'text-slate-600 hover:text-slate-300 pb-1 border-b-2 border-transparent'}`}>{cat}</button>
+                  <button key={cat} onClick={() => setActiveCategory(cat)} className={`text-[10px] font-black uppercase tracking-widest transition-all ${activeCategory === cat ? `text-white border-b-2 ${themeStyles.border} pb-1` : 'text-slate-600 hover:text-slate-300 pb-1 border-b-2 border-transparent'} cursor-pointer`}>{cat}</button>
                 ))}
               </div>
             </div>
@@ -455,7 +474,7 @@ export default function Page() {
                 <span className="text-[10px] font-black text-slate-600 uppercase tracking-widest">TAG:</span>
                 <button onClick={() => setActiveColorTag('All')} className={`text-[10px] font-black uppercase tracking-widest transition-all ${activeColorTag === 'All' ? `text-white border-b-2 border-amber-500 pb-1` : 'text-slate-600 hover:text-slate-300 pb-1 border-b-2 border-transparent'}`}>All</button>
                 {ColorTags.map(tag => (
-                  <button key={tag} onClick={() => setActiveColorTag(tag)} className={`text-[10px] font-black uppercase tracking-widest transition-all ${activeColorTag === tag ? `text-white border-b-2 border-amber-500 pb-1` : 'text-slate-600 hover:text-slate-300 pb-1 border-b-2 border-transparent'}`}>{tag}</button>
+                  <button key={tag} onClick={() => setActiveColorTag(tag)} className={`text-[10px] font-black uppercase tracking-widest transition-all ${activeColorTag === tag ? `text-white border-b-2 border-amber-500 pb-1` : 'text-slate-600 hover:text-slate-300 pb-1 border-b-2 border-transparent'} cursor-pointer`}>{tag}</button>
                 ))}
               </div>
             )}
