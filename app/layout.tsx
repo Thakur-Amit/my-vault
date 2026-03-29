@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   verification: {
     google: "r7fUhHotPsP1eB05lzed-Y-BKr7RSuuTUktwC6cMaGQ", 
   },
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
